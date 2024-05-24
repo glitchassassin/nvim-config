@@ -19,4 +19,4 @@ vim.g.clipboard = {
   },
 }
 
-vim.opts.shell = "zsh"
+vim.opt.shell = "zsh"
