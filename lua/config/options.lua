@@ -18,3 +18,5 @@ vim.g.clipboard = {
     ["*"] = no_paste("*"), -- Pasting disabled
   },
 }
+
+vim.opts.shell = "zsh"
