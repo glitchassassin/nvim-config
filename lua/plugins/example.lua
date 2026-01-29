@@ -33,7 +33,14 @@ return {
   },
   {
     "davidmh/mdx.nvim",
-    config = true,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
+  },
+  {
+    "coder/claudecode.nvim",
+    opts = {
+      terminal = {
+        provider = "none", -- no UI actions; server + tools remain available
+      },
+    },
   },
 }
