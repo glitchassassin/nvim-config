@@ -20,3 +20,4 @@ vim.g.clipboard = {
 }
 
 vim.opt.shell = "zsh"
+vim.g.root_spec = { "cwd" }
