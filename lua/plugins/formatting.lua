@@ -2,8 +2,22 @@ return {
   {
     "stevearc/conform.nvim",
     opts = function(_, opts)
+      local oxfmt_configs = {
+        ".oxfmtrc.json",
+        ".oxfmtrc.jsonc",
+        "oxfmt.config.ts",
+        "oxfmt.config.mts",
+        "vite.config.js",
+        "vite.config.mjs",
+        "vite.config.ts",
+        "vite.config.cjs",
+        "vite.config.mts",
+        "vite.config.cts",
+      }
+
       opts.formatters_by_ft = opts.formatters_by_ft or {}
       for _, ft in ipairs({
+        "astro",
         "css",
         "graphql",
         "handlebars",
@@ -24,28 +38,15 @@ return {
         opts.formatters_by_ft[ft] = { "prettier", "oxfmt", stop_after_first = true }
       end
 
-      -- The installed Oxfmt does not support Astro; leave LSP formatting as a fallback.
-      opts.formatters_by_ft.astro = { "prettier" }
-
       opts.formatters = opts.formatters or {}
       opts.formatters.oxfmt = opts.formatters.oxfmt or {}
+      opts.formatters.oxfmt.condition = function(_, ctx)
+        -- Astro needs project configuration; let Oxfmt report unsupported or invalid settings.
+        return vim.bo[ctx.buf].filetype ~= "astro" or vim.fs.root(ctx.dirname, oxfmt_configs) ~= nil
+      end
       opts.formatters.oxfmt.prepend_args = function(_, ctx)
         -- Project formatter settings and EditorConfig take precedence over these defaults.
-        if
-          vim.fs.root(ctx.dirname, {
-            ".oxfmtrc.json",
-            ".oxfmtrc.jsonc",
-            "oxfmt.config.ts",
-            "oxfmt.config.mts",
-            "vite.config.js",
-            "vite.config.mjs",
-            "vite.config.ts",
-            "vite.config.cjs",
-            "vite.config.mts",
-            "vite.config.cts",
-            ".editorconfig",
-          })
-        then
+        if vim.fs.root(ctx.dirname, oxfmt_configs) or vim.fs.root(ctx.dirname, ".editorconfig") then
           return {}
         end
 
