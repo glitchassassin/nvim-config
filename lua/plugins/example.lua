@@ -15,6 +15,9 @@ return {
   },
   {
     "christoomey/vim-tmux-navigator",
+    cond = function()
+      return vim.env.HERDR_PANE_ID == nil or vim.env.HERDR_PANE_ID == ""
+    end,
     cmd = {
       "TmuxNavigateLeft",
       "TmuxNavigateDown",
